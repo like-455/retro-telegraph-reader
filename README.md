@@ -1,6 +1,9 @@
 # 每日阅读 - 复古电报与报纸阅读器 (Retro Telegraph & Newspaper Reader)
 
-这是一个极具个性的复古拟物风（Skeuomorphic）交互式网页应用，结合了**复古蒸汽朋克电报机**与**老式印刷报纸**的视觉与交互体验。用户可以通过发报敲击摩尔斯电码，或直接输入中文/英文内容生成专属于自己的精美“今日简报”。
+> 这是一个极具个性的复古拟物风（Skeuomorphic）交互式网页应用，结合了**复古蒸汽朋克电报机**与**老式印刷报纸**的视觉与交互体验。
+
+**在线访问**: [https://like-455.github.io/retro-telegraph-reader](https://like-455.github.io/retro-telegraph-reader/)
+
 
 ## ✨ 核心特性
 
