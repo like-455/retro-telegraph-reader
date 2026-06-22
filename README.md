@@ -27,21 +27,3 @@
    ```
 4. 在浏览器中打开提示的本地链接（默认：`http://localhost:3000`）。
 
-## 🚀 部署至 GitHub Pages
-
-本项目已经配置了 GitHub Actions 自动化工作流。只需将代码推送到您的 GitHub 仓库的 `master` 分支，GitHub Actions 就会自动将项目构建并发布到 GitHub Pages。
-
-**部署步骤：**
-1. 在 GitHub 上新建一个公开仓库（例如：`retro-telegraph-reader`）。
-2. 在本地终端中，将此仓库关联到您的远程仓库：
-   ```bash
-   git remote add origin https://github.com/<您的用户名>/<您的仓库名>.git
-   ```
-3. 将本地代码推送到远程仓库：
-   ```bash
-   git branch -M master
-   git push -u origin master
-   ```
-4. 进入您的 GitHub 仓库页面，点击 **Settings** -> **Pages**，确保 **Build and deployment** 下的 **Source** 设置为 **GitHub Actions**。
-5. 稍等片刻，在 Actions 页面看到部署成功后，即可通过以下链接访问您的在线演示：
-   `https://<您的用户名>.github.io/<您的仓库名>/`
