@@ -485,12 +485,16 @@ function initFooterAndModes() {
     audioManager.playPaperRip();
 
     // 延时讹声音摭放，并且保证渲染时带上滤镜
+    paper.classList.add('export-mode'); // 规避 html2canvas 对 SVG 滤镜和 Grid 布局解析崩溃的 Bug
+    
     setTimeout(() => {
       html2canvas(paper, {
         useCORS: true,
         backgroundColor: '#f6ecdc',
-        scale: 2 // 提升清晰度
+        scale: 2, // 提升清晰度
+        logging: true
       }).then(canvas => {
+        paper.classList.remove('export-mode');
         const link = document.createElement('a');
         link.download = `每日电报-${Date.now()}.png`;
         link.href = canvas.toDataURL('image/png');
@@ -499,6 +503,7 @@ function initFooterAndModes() {
         btnRip.textContent = "撕下电报 (导出JPG)";
         btnRip.disabled = false;
       }).catch(err => {
+        paper.classList.remove('export-mode');
         console.error("image save fail", err);
         btnRip.textContent = "撕下电报 (导出JPG)";
         btnRip.disabled = false;
