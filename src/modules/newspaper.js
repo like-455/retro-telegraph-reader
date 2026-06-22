@@ -188,8 +188,13 @@ class NewspaperReader {
     let html = '';
     article.content.forEach((para, idx) => {
       const isFirst = idx === 0;
-      const classStr = isFirst ? 'class="lead-paragraph"' : '';
-      html += '<p ' + classStr + '>' + para + '</p>';
+      if (isFirst && para.length > 0) {
+        const firstChar = para[0];
+        const restText = para.slice(1);
+        html += '<p class="lead-paragraph"><span class="drop-cap">' + firstChar + '</span>' + restText + '</p>';
+      } else {
+        html += '<p>' + para + '</p>';
+      }
     });
     // 放入双栏报纸容器中
     this.contentContainer.innerHTML = html;
@@ -243,8 +248,17 @@ class NewspaperReader {
       if (pObj.currentCharIndex < pObj.fullText.length) {
         const char = pObj.fullText[pObj.currentCharIndex];
         
-        // 在光标前插入字符
-        cursor.before(char);
+        // 如果是首段落的首个字符，使用 drop-cap 包装
+        if (currentParaIdx === 0 && pObj.currentCharIndex === 0) {
+          const dropCapSpan = document.createElement('span');
+          dropCapSpan.className = 'drop-cap';
+          dropCapSpan.textContent = char;
+          cursor.before(dropCapSpan);
+        } else {
+          // 在光标前插入普通字符
+          cursor.before(char);
+        }
+        
         pObj.currentCharIndex++;
 
         // 摭放打字机敲击声

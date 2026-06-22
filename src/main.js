@@ -190,8 +190,19 @@ function insertCharToPaper(char) {
     newPara.appendChild(cursor);
     contentContainer.appendChild(newPara);
   } else {
-    // 录入字母/中文字符
-    cursor.before(char);
+    // 判断是否为整篇文章的第一个字符
+    const isFirstPara = activePara === contentContainer.querySelector('p.draft-p');
+    const isFirstChar = activePara.childNodes.length === 1 && activePara.childNodes[0] === cursor;
+
+    if (isFirstPara && isFirstChar) {
+      const dropCapSpan = document.createElement('span');
+      dropCapSpan.className = 'drop-cap';
+      dropCapSpan.textContent = char;
+      cursor.before(dropCapSpan);
+    } else {
+      // 录入普通字母/中文字符
+      cursor.before(char);
+    }
   }
 
   // 滚动条跟进
