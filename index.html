@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>复古电报与旧报纸每日阅读器 - Retro Telegraph Reader</title>
+  <!-- Google Fonts 引入复古铅印与打字机字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <link rel="stylesheet" href="/src/styles/paper.css">
+  <link rel="stylesheet" href="/src/styles/skeuomorphic.css">
+</head>
+<body class="dark-room">
+  <!-- SVG 滤镜系统：用于生成发黄旧报纸质感与油墨斑驳铅印效果 -->
+  <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <!-- 纸张质感滤镜 -->
+    <filter id="paper-texture">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
+      <feDiffuseLighting in="noise" lighting-color="#f6ecdc" surfaceScale="2" result="light">
+        <feDistantLight azimuth="60" elevation="50" />
+      </feDiffuseLighting>
+      <feBlend mode="multiply" in="SourceGraphic" in2="light" result="blend" />
+    </filter>
+    
+    <!-- 铅印油墨斑驳/洇染滤镜 -->
+    <filter id="ink-bleed">
+      <feTurbulence type="fractalNoise" baseFrequency="0.15" numOctaves="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+      <feGaussianBlur in="displaced" stdDeviation="0.4" result="blurred" />
+      <feMerge>
+        <feMergeNode in="blurred" />
+        <feMergeNode in="SourceGraphic" opacity="0.85" />
+      </feMerge>
+    </filter>
+    
+    <!-- 印章斑驳滤镜 -->
+    <filter id="stamp-grunge">
+      <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="3" result="noise" />
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="mask" />
+      <feComposite operator="in" in="SourceGraphic" in2="mask" />
+    </filter>
+  </svg>
+
+  <!-- 书房暗室容器 -->
+  <div class="workspace">
+    <!-- 1. 顶部古董拉线台灯 -->
+    <div class="vintage-lamp-container">
+      <div class="lamp-shade"></div>
+      <div class="lamp-light-cone"></div>
+      <div class="lamp-pull-cord" id="lamp-pull-cord">
+        <div class="cord-thread"></div>
+        <div class="cord-handle"></div>
+      </div>
+    </div>
+
+    <!-- 2. 主控制台（桌面） -->
+    <main class="desk-surface">
+      <div class="desk-grid">
+        
+        <!-- 左侧：留声机与环境音控制器 -->
+        <section class="desk-widget gramophone-section">
+          <div class="gramophone-case">
+            <div class="turntable-container">
+              <div class="vinyl-record" id="vinyl-record">
+                <div class="record-label"></div>
+              </div>
+              <div class="tone-arm" id="tone-arm"></div>
+            </div>
+            <div class="gramophone-horn"></div>
+            <!-- 音量与环境音旋钮 -->
+            <div class="knobs-row">
+              <div class="knob-container">
+                <div class="knob" id="knob-music" data-value="50">
+                  <div class="knob-indicator"></div>
+                </div>
+                <span class="knob-label">黑胶音量</span>
+              </div>
+              <div class="knob-container">
+                <div class="knob" id="knob-env" data-value="30">
+                  <div class="knob-indicator"></div>
+                </div>
+                <span class="knob-label">环境雨声</span>
+              </div>
+            </div>
+            <!-- 运行状态指示灯 -->
+            <div class="indicator-light" id="gramophone-light"></div>
+          </div>
+        </section>
+
+        <!-- 中间：打字机与阅读报纸核心区 -->
+        <section class="main-telegraph-machine">
+          <!-- 滚筒卷纸区 -->
+          <div class="paper-roller-bracket">
+            <div class="roller-cylinder"></div>
+            <!-- 纸张张紧拉杆 -->
+            <button class="mechanical-lever" id="lever-paper-feed" title="撕下/装填纸张">
+              <div class="lever-bar"></div>
+              <div class="lever-ball"></div>
+            </button>
+            
+            <!-- 滚筒卷出的纸张（旧报纸/电报纸） -->
+            <div class="paper-scroller" id="paper-scroller">
+              <article class="vintage-paper" id="vintage-paper">
+                <!-- 报纸报头 -->
+                <header class="newspaper-header">
+                  <div class="header-top-border"></div>
+                  <div class="newspaper-title">每日电报</div>
+                  <div class="newspaper-meta">
+                    <span id="newspaper-date">光绪年间 · 十月十日</span>
+                    <span>定价：铜板三枚</span>
+                    <span id="newspaper-issue">第 001 期</span>
+                  </div>
+                  <div class="header-bottom-border"></div>
+                </header>
+
+                <!-- 报纸正文区 -->
+                <div class="newspaper-columns" id="newspaper-content">
+                  <!-- JS 会动态打字渲染内容到这里 -->
+                </div>
+                
+                <!-- 印章容器：记录用户在报纸上盖的印章 -->
+                <div class="stamps-container" id="stamps-container"></div>
+              </article>
+            </div>
+          </div>
+
+          <!-- 打字机键盘与底座 -->
+          <div class="typewriter-base">
+            <!-- 机械拉杆与物理仪表 -->
+            <div class="dashboard-panel">
+              <div class="gauge-container">
+                <div class="gauge">
+                  <div class="gauge-pointer" id="gauge-pointer"></div>
+                  <div class="gauge-scale"></div>
+                </div>
+                <span class="gauge-label">打字速率</span>
+              </div>
+              <div class="mode-switch-group">
+                <button class="toggle-button active" id="btn-mode-read">每日阅读</button>
+                <button class="toggle-button" id="btn-mode-write">打字创作</button>
+              </div>
+            </div>
+            
+            <!-- 虚拟机械键盘 -->
+            <div class="typewriter-keyboard" id="typewriter-keyboard">
+              <!-- JS 会动态生成键盘按键，方便绑定点击音效 -->
+            </div>
+            <!-- 隐藏的输入捕获框，用于支持拼音/中文输入法 -->
+            <textarea id="chinese-input-trap" style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0; z-index: -1;"></textarea>
+          </div>
+        </section>
+
+        <!-- 右侧：油墨印章架 & 摩尔斯发报机 -->
+        <section class="desk-widget side-panel">
+          <!-- 印章架 -->
+          <div class="stamp-rack">
+            <h3 class="panel-title">油墨印泥架</h3>
+            <div class="stamps-flex">
+              <div class="stamp-tool" data-stamp="stamp-approved" id="stamp-approved" draggable="true">
+                <div class="stamp-handle"></div>
+                <div class="stamp-base">已阅</div>
+              </div>
+              <div class="stamp-tool" data-stamp="stamp-secret" id="stamp-secret" draggable="true">
+                <div class="stamp-handle"></div>
+                <div class="stamp-base">机密</div>
+              </div>
+              <div class="stamp-tool" data-stamp="stamp-urgent" id="stamp-urgent" draggable="true">
+                <div class="stamp-handle"></div>
+                <div class="stamp-base">特急</div>
+              </div>
+            </div>
+            <p class="rack-hint">拽取印章，于报纸上敲落</p>
+          </div>
+
+          <!-- 摩尔斯发报机 -->
+          <div class="telegraph-key-container">
+            <h3 class="panel-title">摩尔斯电报机</h3>
+            <div class="telegraph-key" id="telegraph-key">
+              <div class="key-arm"></div>
+              <div class="key-knob"></div>
+            </div>
+            <div class="telegraph-terminal">
+              <textarea class="terminal-input" id="telegraph-input" placeholder="打入字符，译成电码..."></textarea>
+              <div class="terminal-output-paper">
+                <div class="telegraph-tape" id="telegraph-tape">
+                  <!-- 摩尔斯输出打孔纸带效果 -->
+                  ... - . .- -- ...
+                </div>
+              </div>
+              <button class="mechanical-btn" id="btn-play-morse">发报 (Play)</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+    
+    <!-- 底部状态与操作按钮 -->
+    <footer class="vintage-footer">
+      <div class="footer-buttons">
+        <button class="mechanical-btn" id="btn-prev-article">上一篇</button>
+        <button class="mechanical-btn" id="btn-next-article">下一篇</button>
+        <button class="mechanical-btn accent-btn" id="btn-rip-paper">撕下电报 (导出JPG)</button>
+      </div>
+      <div class="footer-info">蒸汽驱动阅读仪 © 2026</div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

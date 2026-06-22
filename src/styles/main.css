@@ -1,0 +1,225 @@
+/* main.css - 全局基础样式与暗室布局 */
+
+:root {
+  --wood-dark: #1e120c;
+  --wood-light: #2c1a12;
+  --lamp-glow-on: radial-gradient(circle 600px at 50% 150px, rgba(253, 230, 138, 0.28) 0%, rgba(253, 230, 138, 0.08) 50%, rgba(0, 0, 0, 0) 100%);
+  --lamp-glow-off: radial-gradient(circle 500px at 50% 150px, rgba(147, 197, 253, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+  --shadow-intensity: 0.45;
+  --ui-font: 'Special Elite', 'Courier Prime', Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.dark-room {
+  background: radial-gradient(circle, var(--wood-light) 0%, var(--wood-dark) 100%);
+  background-color: var(--wood-dark);
+  color: #d8c3a5;
+  font-family: var(--ui-font);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+  transition: background 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 拟物风格的桌面网格背景 */
+body.dark-room::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px),
+                    repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 15px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 书房暗室工作台容器 */
+.workspace {
+  width: 100%;
+  max-width: 1400px;
+  min-height: 90vh;
+  margin: 20px auto;
+  padding: 40px 20px 20px 20px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 1. 顶部古董拉线台灯 */
+.vintage-lamp-container {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lamp-shade {
+  width: 280px;
+  height: 70px;
+  background: linear-gradient(180deg, #1c1917 0%, #44403c 40%, #1c1917 100%);
+  border-bottom: 6px solid #eab308;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+/* 黄铜灯罩支架 */
+.lamp-shade::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 15px;
+  background: radial-gradient(circle, #eab308 0%, #a16207 100%);
+  border-radius: 4px;
+}
+
+/* 台灯光锥投影效果 */
+.lamp-light-cone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: color-dodge;
+  background: var(--lamp-glow-on);
+  transition: background 0.5s ease;
+}
+
+body.lamp-off .lamp-light-cone {
+  background: var(--lamp-glow-off);
+  mix-blend-mode: multiply;
+}
+
+body.lamp-off {
+  background: radial-gradient(circle, #0c0705 0%, #030202 100%);
+}
+
+/* 台灯拉线开关 */
+.lamp-pull-cord {
+  position: absolute;
+  top: 60px;
+  right: 60px;
+  width: 20px;
+  height: 180px;
+  cursor: pointer;
+  z-index: 15;
+  transition: transform 0.1s ease;
+}
+
+.lamp-pull-cord:active {
+  transform: translateY(15px);
+}
+
+.cord-thread {
+  width: 2px;
+  height: 140px;
+  background: #a8a29e;
+  margin: 0 auto;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.cord-handle {
+  width: 12px;
+  height: 24px;
+  background: linear-gradient(90deg, #d97706 0%, #fbbf24 50%, #d97706 100%);
+  border-radius: 6px;
+  margin: 0 auto;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* 2. 桌面工作区布局 */
+.desk-surface {
+  flex-grow: 1;
+  display: flex;
+  align-items: stretch;
+  margin-top: 40px;
+}
+
+.desk-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  gap: 30px;
+  width: 100%;
+}
+
+/* 通用拟物化小部件容器 */
+.desk-widget {
+  background: rgba(28, 17, 12, 0.6);
+  border: 1px solid rgba(216, 195, 165, 0.15);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.desk-widget::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.03);
+  pointer-events: none;
+}
+
+.panel-title {
+  font-size: 1.1rem;
+  color: #c5a880;
+  text-align: center;
+  border-bottom: 1px double rgba(216, 195, 165, 0.3);
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
+
+/* 3. 底部操作栏与版权页脚 */
+.vintage-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px 0 10px;
+  border-top: 1px double rgba(216, 195, 165, 0.2);
+}
+
+.footer-info {
+  font-size: 0.85rem;
+  color: #8c7860;
+  letter-spacing: 1px;
+}
+
+/* 响应式媒体查询 */
+@media (max-width: 1200px) {
+  .desk-grid {
+    grid-template-columns: 1fr;
+  }
+  .desk-widget {
+    min-height: auto;
+  }
+}

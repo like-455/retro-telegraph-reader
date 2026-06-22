@@ -1,0 +1,613 @@
+/* skeuomorphic.css - 拟物化控制面板与唱机键盘样式 */
+
+/* 1. 留声机与音乐环境声模块 */
+.gramophone-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.gramophone-case {
+  width: 100%;
+  height: 240px;
+  background: linear-gradient(135deg, #3d2419 0%, #1e120c 100%);
+  border: 4px solid #5a4535;
+  border-radius: 12px;
+  box-shadow: inset 0 3px 10px rgba(255,255,255,0.05), 0 10px 20px rgba(0,0,0,0.6);
+  padding: 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 黄铜喇叭装饰 */
+.gramophone-horn {
+  position: absolute;
+  top: -45px;
+  left: -20px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle at 70% 30%, #fef08a 0%, #ca8a04 50%, #854d0e 100%);
+  border-radius: 50%;
+  box-shadow: -5px 10px 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(0,0,0,0.5);
+  transform: rotate(30deg);
+  z-index: 1;
+}
+
+.gramophone-horn::after {
+  content: "";
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  width: 30px;
+  height: 30px;
+  background: #111;
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.9);
+}
+
+.turntable-container {
+  width: 140px;
+  height: 140px;
+  background: #151515;
+  border-radius: 50%;
+  border: 3px solid #2e2e2e;
+  position: relative;
+  box-shadow: inset 0 5px 10px rgba(0,0,0,0.8), 0 2px 4px rgba(255,255,255,0.05);
+  margin-top: 15px;
+}
+
+/* 黑胶唱片盘面 */
+.vinyl-record {
+  width: 126px;
+  height: 126px;
+  background: repeating-radial-gradient(
+    circle,
+    #181818,
+    #181818 2px,
+    #222 3px,
+    #181818 4px
+  );
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transform: rotate(0deg);
+}
+
+/* 播放时旋转动画 */
+.vinyl-record.playing {
+  animation: rotate-vinyl 1.8s linear infinite;
+}
+
+@keyframes rotate-vinyl {
+  100% { transform: rotate(360deg); }
+}
+
+.record-label {
+  width: 38px;
+  height: 38px;
+  background: radial-gradient(circle, #f59e0b 0%, #b45309 100%);
+  border: 2px solid #000;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.record-label::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #d8c3a5;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 2px rgba(0,0,0,0.8);
+}
+
+/* 唱片机唱臂 */
+.tone-arm {
+  position: absolute;
+  top: -5px;
+  right: 15px;
+  width: 15px;
+  height: 85px;
+  background: linear-gradient(90deg, #d6d3d1 0%, #78716c 100%);
+  border-radius: 4px;
+  transform-origin: center 10px;
+  transform: rotate(-35deg); /* 未播放状态 */
+  transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+  z-index: 4;
+  box-shadow: -2px 5px 8px rgba(0,0,0,0.4);
+}
+
+.tone-arm.playing {
+  transform: rotate(15deg); /* 压在黑胶唱片上 */
+}
+
+/* 唱针/唱头部分 */
+.tone-arm::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -5px;
+  width: 25px;
+  height: 15px;
+  background: #a8a29e;
+  border: 1px solid #444;
+  border-radius: 2px;
+}
+
+/* 旋转旋钮排布 */
+.knobs-row {
+  display: flex;
+  gap: 25px;
+  margin-top: 18px;
+  z-index: 2;
+}
+
+.knob-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.knob {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #444 0%, #1c1c1c 80%, #111 100%);
+  border: 2px solid #5a4535;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.1);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transform: rotate(0deg);
+  transition: transform 0.05s linear;
+}
+
+.knob-indicator {
+  width: 3px;
+  height: 15px;
+  background: #ca8a04;
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.knob-label {
+  font-size: 0.75rem;
+  color: #a89276;
+}
+
+/* 运行状态指示灯 */
+.indicator-light {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ef4444; /* 停止时为红色 */
+  box-shadow: 0 0 5px #ef4444;
+  position: absolute;
+  bottom: 12px;
+  right: 15px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.indicator-light.active {
+  background-color: #22c55e; /* 播放时为绿色 */
+  box-shadow: 0 0 8px #22c55e, 0 0 15px #22c55e;
+}
+
+
+/* 2. 打字机控制区 */
+.main-telegraph-machine {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 机械撕纸/装填拉杆 */
+.mechanical-lever {
+  position: absolute;
+  top: 15px;
+  right: -5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  outline: none;
+}
+
+.lever-bar {
+  width: 8px;
+  height: 60px;
+  background: linear-gradient(90deg, #e7e5e4 0%, #78716c 100%);
+  border-radius: 4px;
+  transform-origin: bottom center;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: -2px 4px 6px rgba(0,0,0,0.5);
+}
+
+.lever-ball {
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, #ea580c 0%, #7c2d12 100%);
+  border-radius: 50%;
+  margin-top: -10px;
+  margin-left: -6px;
+  box-shadow: -3px 5px 8px rgba(0,0,0,0.6);
+}
+
+/* 拉杆拉动时的旋转状态 */
+.mechanical-lever.pulled .lever-bar {
+  transform: rotate(50deg);
+}
+
+/* 仪表盘面板 */
+.dashboard-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #19100a;
+  border: 2px solid #3d2419;
+  border-radius: 6px;
+  padding: 10px 18px;
+  margin-bottom: 15px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+}
+
+.gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.gauge {
+  width: 60px;
+  height: 32px;
+  background: #ede6d6;
+  border: 2px solid #5a4535;
+  border-bottom: none;
+  border-radius: 35px 35px 0 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.gauge-scale {
+  width: 100%;
+  height: 100%;
+  border-radius: 35px 35px 0 0;
+  background-image: repeating-conic-gradient(from 270deg, #111 0deg, #111 2deg, transparent 2deg, transparent 15deg);
+  opacity: 0.4;
+}
+
+.gauge-pointer {
+  width: 2px;
+  height: 26px;
+  background: #ef4444;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-origin: bottom center;
+  transform: rotate(-60deg); /* 默认静止偏转角 */
+  transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.gauge-label {
+  font-size: 0.7rem;
+  color: #a89276;
+}
+
+/* 阅读/创作模式切换按钮 */
+.mode-switch-group {
+  display: flex;
+  background: #0f0906;
+  border-radius: 20px;
+  padding: 3px;
+  border: 1px solid #3d2419;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  color: #8c7860;
+  font-family: var(--ui-font);
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-button.active {
+  background: radial-gradient(circle, #ea580c 0%, #9a3412 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.4);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 打字机键盘底座 */
+.typewriter-base {
+  background: #241710;
+  border: 4px solid #3d2419;
+  border-radius: 8px;
+  padding: 20px 15px;
+  box-shadow: inset 0 3px 10px rgba(255,255,255,0.05), 0 10px 25px rgba(0,0,0,0.8);
+}
+
+.typewriter-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+}
+
+/* 3D立体金属键帽 */
+.key-cap {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-family: var(--ui-font);
+  font-weight: bold;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  
+  /* 黄铜外圈圆键帽的3D拟物感 */
+  background: radial-gradient(circle at 50% 15%, #333 0%, #151515 80%, #000 100%);
+  border: 2px solid #ca8a04; /* 氧化黄铜边缘 */
+  color: #ede6d6;
+  box-shadow: 0 4px 0 #854d0e, 0 6px 10px rgba(0, 0, 0, 0.7);
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+
+.key-cap:active, .key-cap.pressed {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #854d0e, 0 2px 4px rgba(0, 0, 0, 0.8);
+  background: radial-gradient(circle at 50% 15%, #151515 0%, #050505 100%);
+  color: #ca8a04;
+}
+
+/* 空格键特殊处理 */
+.key-cap.space-key {
+  width: 220px;
+  border-radius: 8px;
+  box-shadow: 0 4px 0 #854d0e, 0 6px 10px rgba(0, 0, 0, 0.7);
+}
+
+
+/* 3. 右侧面板：油墨印章与摩尔斯发报机 */
+.side-panel {
+  gap: 25px;
+}
+
+/* 印泥架与油墨印章工具 */
+.stamp-rack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stamps-flex {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+}
+
+.stamp-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+.stamp-tool:active {
+  cursor: grabbing;
+  transform: scale(1.08);
+}
+
+.stamp-tool.dragging {
+  opacity: 0.4;
+}
+
+.stamp-handle {
+  width: 18px;
+  height: 38px;
+  background: linear-gradient(90deg, #7c2d12 0%, #ea580c 50%, #7c2d12 100%);
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.stamp-handle::before {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  width: 26px;
+  height: 8px;
+  background: radial-gradient(circle, #eab308 0%, #a16207 100%);
+  border-radius: 2px;
+}
+
+.stamp-base {
+  background: #1c1917;
+  color: #ef4444;
+  border: 1px solid #7f1d1d;
+  font-size: 0.75rem;
+  padding: 3px 6px;
+  margin-top: 6px;
+  font-weight: bold;
+  border-radius: 2px;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.5);
+}
+
+.rack-hint {
+  font-size: 0.75rem;
+  color: #8c7860;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* 摩尔斯发报电键 */
+.telegraph-key-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.telegraph-key {
+  width: 160px;
+  height: 60px;
+  background: #1a1512;
+  border-bottom: 4px solid #33221a;
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 15px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+}
+
+.key-arm {
+  width: 100px;
+  height: 10px;
+  background: linear-gradient(180deg, #d6d3d1 0%, #78716c 100%);
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  transform-origin: right center;
+  transition: transform 0.05s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.key-knob {
+  width: 28px;
+  height: 28px;
+  background: radial-gradient(circle, #222 0%, #000 100%);
+  border-radius: 50%;
+  position: absolute;
+  top: -9px;
+  left: -10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+  border: 1px solid #444;
+}
+
+/* 发报电键按下时的微弱转动 */
+.telegraph-key:active .key-arm, .telegraph-key.pressed .key-arm {
+  transform: rotate(3deg);
+}
+
+.telegraph-terminal {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.terminal-input {
+  background-color: #110906;
+  border: 1px solid #3d2419;
+  border-radius: 4px;
+  color: #ca8a04;
+  padding: 8px;
+  font-family: var(--ui-font);
+  font-size: 0.8rem;
+  resize: none;
+  height: 60px;
+  outline: none;
+}
+
+.terminal-input::placeholder {
+  color: #573a2e;
+}
+
+/* 电报输出纸带 */
+.terminal-output-paper {
+  background: #ebdcb9;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+  padding: 8px;
+  min-height: 40px;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.terminal-output-paper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 10px rgba(120, 90, 60, 0.3);
+  pointer-events: none;
+}
+
+.telegraph-tape {
+  font-family: var(--ui-font);
+  font-size: 0.85rem;
+  color: #2b231d;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* 4. 底部机械按钮 */
+.mechanical-btn {
+  font-family: var(--ui-font);
+  background: linear-gradient(180deg, #3d2c1e 0%, #1f140d 100%);
+  border: 2px solid #5a4535;
+  color: #ede6d6;
+  padding: 10px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.1);
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  outline: none;
+}
+
+.mechanical-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.6);
+  background: linear-gradient(180deg, #1f140d 0%, #110906 100%);
+}
+
+.accent-btn {
+  border-color: #ea580c;
+  color: #fff;
+  background: linear-gradient(180deg, #ea580c 0%, #9a3412 100%);
+  box-shadow: 0 4px 6px rgba(234,88,12,0.3);
+}
+
+.accent-btn:active {
+  background: linear-gradient(180deg, #9a3412 0%, #7c2d12 100%);
+}

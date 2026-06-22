@@ -1,0 +1,239 @@
+/* paper.css - 复古旧报纸与电报纸张样式与排版 */
+
+/* 纸张滚筒支架 */
+.paper-roller-bracket {
+  position: relative;
+  background: #110906;
+  border: 4px solid #3d2419;
+  border-radius: 8px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.9);
+  padding: 18px 10px 0 10px; /* 给滚筒预留空间 */
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* 滚筒圆柱体组件 */
+.roller-cylinder {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 25px;
+  background: linear-gradient(180deg, #1f1f1f 0%, #444 30%, #151515 70%, #000 100%);
+  border-bottom: 2px solid #555;
+  border-radius: 3px;
+  z-index: 5;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.6);
+}
+
+/* 纸张滚动区容器 */
+.paper-scroller {
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 10px 15px 40px 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #5a4535 #1c110b;
+  position: relative;
+  z-index: 2;
+  /* 模拟纸张在滚筒缝隙下的暗部阴影 */
+  background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 25px);
+}
+
+.paper-scroller::-webkit-scrollbar {
+  width: 6px;
+}
+.paper-scroller::-webkit-scrollbar-track {
+  background: #1c110b;
+}
+.paper-scroller::-webkit-scrollbar-thumb {
+  background: #5a4535;
+  border-radius: 3px;
+}
+
+/* 拟真黄色旧报纸 */
+.vintage-paper {
+  background-color: #f6ecdc;
+  color: #1a1512;
+  padding: 40px 30px;
+  min-height: 600px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+  transform-origin: top center;
+  transition: transform 0.2s ease;
+  
+  /* 应用 SVG 纸张纤维质感滤镜 */
+  filter: url(#paper-texture);
+}
+
+/* 纸张边缘的微小烧焦感与磨损印染阴影 */
+.vintage-paper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 40px rgba(115, 80, 40, 0.22),
+              inset 0 0 10px rgba(90, 60, 30, 0.15);
+  pointer-events: none;
+}
+
+/* 报纸报头 */
+.newspaper-header {
+  text-align: center;
+  margin-bottom: 25px;
+  filter: url(#ink-bleed); /* 铅印油墨洇染/斑驳效果 */
+}
+
+.header-top-border {
+  border-top: 4px solid #1a1512;
+  border-bottom: 1.5px solid #1a1512;
+  height: 3px;
+  margin-bottom: 12px;
+}
+
+.header-bottom-border {
+  border-top: 1.5px solid #1a1512;
+  border-bottom: 4px solid #1a1512;
+  height: 3px;
+  margin-top: 12px;
+}
+
+.newspaper-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #1a1512;
+}
+
+.newspaper-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border-bottom: 1px solid #1a1512;
+  font-family: 'Courier Prime', monospace;
+  color: #2b231d;
+}
+
+/* 双栏排版报纸正文 */
+.newspaper-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  text-align: justify;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: #1a1512;
+  filter: url(#ink-bleed); /* 应用铅印油墨滤镜 */
+}
+
+.newspaper-columns p {
+  margin-bottom: 14px;
+  text-indent: 2em;
+  font-family: Georgia, serif;
+}
+
+/* 首字放大段落效果 */
+.newspaper-columns p.lead-paragraph {
+  text-indent: 0;
+}
+
+.newspaper-columns p.lead-paragraph::first-letter {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 3rem;
+  float: left;
+  line-height: 0.85;
+  margin-right: 6px;
+  margin-top: 4px;
+  font-weight: bold;
+  color: #000;
+  border: 1px solid #1a1512;
+  padding: 4px 6px;
+  background-color: rgba(0,0,0,0.03);
+}
+
+/* 已阅/机密/特急印章的容器 */
+.stamps-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* 穿透鼠标事件，便于阅读纸面文本 */
+  z-index: 5;
+}
+
+/* 红色油墨印章元素 */
+.placed-stamp {
+  position: absolute;
+  font-family: 'Playfair Display', "Microsoft YaHei", serif;
+  font-weight: 900;
+  color: rgba(185, 28, 28, 0.85); /* 朱砂红印泥颜色 */
+  border: 3px double rgba(185, 28, 28, 0.85);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 1.3rem;
+  letter-spacing: 4px;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+  transform: rotate(-15deg);
+  box-shadow: 0 0 1px rgba(0,0,0,0.1);
+  background-color: transparent;
+  
+  /* 盖印油墨斑驳滤镜 */
+  filter: url(#stamp-grunge);
+}
+
+.placed-stamp::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border: 1px solid rgba(185, 28, 28, 0.7);
+  pointer-events: none;
+}
+
+/* 打字创作模式下的闪烁光标 */
+.typewriter-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background-color: #7c2d12;
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: cursor-blink 0.8s infinite steps(2);
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 纸张装填/换行滑落物理动画 */
+@keyframes paper-insert {
+  0% {
+    transform: translateY(-100px) scaleY(0.8);
+    opacity: 0.5;
+    filter: url(#paper-texture) blur(1px);
+  }
+  60% {
+    transform: translateY(12px) scaleY(1.05);
+    opacity: 0.95;
+  }
+  85% {
+    transform: translateY(-4px) scaleY(0.98);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
+    filter: url(#paper-texture);
+  }
+}
