@@ -81,32 +81,31 @@ class NewspaperReader {
       if (json && json.code === 200 && json.data) {
         const newsData = json.data;
         
-        // 将15条新闻分别映射为单独的文章，丰富详细内容
-        const mappedArticles = newsData.news.map((item, index) => {
-          // 尝试以“：”或“；”或“，”提取出标题
-          let title = "今日要闻";
-          const splitters = ['：', '；', '，'];
-          for (let splitter of splitters) {
-            if (item.includes(splitter)) {
-              title = item.split(splitter)[0];
-              break;
-            }
-          }
-          if (title.length > 20 || title === "今日要闻") {
-            title = `今日电讯第 ${index + 1} 条`;
-          }
+        // 将新闻分组映射为包含多条内容的长文章，丰富每页纸张的阅读体验
+        const mappedArticles = [];
+        const itemsPerPage = 5;
+        for (let i = 0; i < newsData.news.length; i += itemsPerPage) {
+          const chunk = newsData.news.slice(i, i + itemsPerPage);
+          const pageNum = Math.floor(i / itemsPerPage) + 1;
+          
+          const content = [
+            `【综合电讯】今日海内外要闻荟萃（第 ${pageNum} 辑）：`
+          ];
+          
+          chunk.forEach((item, chunkIdx) => {
+            content.push(`（${i + chunkIdx + 1}）${item}`);
+          });
+          
+          // 只在每一辑的最后附上格言
+          content.push(`【格言联璧】${newsData.tip || "日日新，又日新。"}`);
 
-          return {
-            title: title,
+          mappedArticles.push({
+            title: `今日电讯 · 第 ${pageNum} 辑`,
             date: newsData.date + " · " + (newsData.day_of_week || "") + " · " + (newsData.lunar_date || ""),
-            issue: "新电 " + newsData.date.replace(/-/g, "") + ` - ${String(index + 1).padStart(2, '0')}`,
-            content: [
-              `【无线电接收译电】第 ${index + 1} 号电文：`,
-              item,
-              `【格言联璧】${newsData.tip || "日日新，又日新。"}`
-            ]
-          };
-        });
+            issue: "新电 " + newsData.date.replace(/-/g, "") + ` - 0${pageNum}`,
+            content: content
+          });
+        }
 
         // 替换掉首个占位文章，并在前面插入这些今日要闻
         // 原始后备的泰坦尼克号、申报、雷明顿则接在后面

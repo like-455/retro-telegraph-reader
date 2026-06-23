@@ -72,6 +72,15 @@ export function textToMorse(text) {
     .join(' ');
 }
 
+const REVERSE_MORSE_MAP = Object.entries(MORSE_MAP).reduce((acc, [char, code]) => {
+  if (char !== ' ') acc[code] = char;
+  return acc;
+}, {});
+
+export function morseToText(morseStr) {
+  return morseStr.trim().split(/\s+/).map(code => REVERSE_MORSE_MAP[code] || '').join('');
+}
+
 /**
  * 摭放一段摩尔斯电码
  * @param {string} text 要摭放的源文本 (如 "SOS")

@@ -1,6 +1,6 @@
 /* main.js - 复古电报每日阅读器核必入口与事件联动系统 */
 import audioManager from './modules/audio.js';
-import { playMorseString, manualTelegraphKey, textToMorse } from './modules/telegraph.js';
+import { playMorseString, manualTelegraphKey, textToMorse, morseToText } from './modules/telegraph.js';
 import { initStampSystem } from './modules/stamp.js';
 import { newspaperReader } from './modules/newspaper.js';
 import html2canvas from 'html2canvas';
@@ -377,14 +377,32 @@ function initTelegraphWidget() {
   const key = document.getElementById('telegraph-key');
   const tape = document.getElementById('telegraph-tape');
   const playBtn = document.getElementById('btn-play-morse');
+  const resetBtn = document.getElementById('btn-reset-morse');
   const input = document.getElementById('telegraph-input');
   
   if (!key || !tape || !playBtn || !input) return;
+
+  let spaceTimer = null;
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      input.value = '';
+      tape.textContent = '';
+      if (spaceTimer) {
+        clearTimeout(spaceTimer);
+        spaceTimer = null;
+      }
+    });
+  }
 
   // 手动按键事件
   key.addEventListener('mousedown', () => {
     key.classList.add('pressed');
     manualTelegraphKey.press();
+    if (spaceTimer) {
+      clearTimeout(spaceTimer);
+      spaceTimer = null;
+    }
   });
 
   window.addEventListener('mouseup', () => {
@@ -394,30 +412,45 @@ function initTelegraphWidget() {
       
       // 彐纸带上写字符
       if (symbol) {
-        tape.textContent = (tape.textContent + symbol).slice(-24); // 仅保留最后24个字符
+        tape.textContent = (tape.textContent + symbol).slice(-40); // 增加保留长度以容纳更多手动输入的电码
+        
+        // 停顿 600ms 后自动补一个空格，以分割字母
+        spaceTimer = setTimeout(() => {
+          tape.textContent = (tape.textContent + ' ').slice(-40);
+        }, 600);
       }
     }
   });
 
-  // 输入桅一键摩尔斯发报
+  // 输入框一键摩尔斯发报 / 纸带反向译电
   playBtn.addEventListener('click', async () => {
-    const text = input.value.trim();
-    if (!text) return;
+    let text = input.value.trim();
+    
+    // 如果输入框为空，尝试将纸带上的摩尔斯电码反向翻译到输入框中
+    if (!text) {
+      const morseOnTape = tape.textContent.trim();
+      if (morseOnTape) {
+        const translated = morseToText(morseOnTape);
+        if (translated) {
+          input.value = translated;
+          text = translated;
+        }
+      }
+      if (!text) return; // 如果依然为空，无法发报则返回
+    }
 
     playBtn.disabled = true;
     playBtn.textContent = "发报中...";
 
     // 实时更新纸带
-    const morseStr = textToMorse(text);
     tape.textContent = '';
-    
     let currentMorseDisplay = '';
 
     await playMorseString(text, (isPressed, symbol) => {
       if (isPressed) {
         key.classList.add('pressed');
         currentMorseDisplay += symbol;
-        tape.textContent = currentMorseDisplay.slice(-24);
+        tape.textContent = currentMorseDisplay.slice(-40);
       } else {
         key.classList.remove('pressed');
       }
@@ -440,9 +473,19 @@ function initFooterAndModes() {
 
   // 阅读文章切换
   btnPrev.addEventListener('click', () => {
+    if (activeMode === 'write') {
+      activeMode = 'read';
+      btnRead.classList.add('active');
+      btnWrite.classList.remove('active');
+    }
     newspaperReader.prevArticle();
   });
   btnNext.addEventListener('click', () => {
+    if (activeMode === 'write') {
+      activeMode = 'read';
+      btnRead.classList.add('active');
+      btnWrite.classList.remove('active');
+    }
     newspaperReader.nextArticle();
   });
 

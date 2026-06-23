@@ -120,11 +120,9 @@
   color: #2b231d;
 }
 
-/* 双栏排版报纸正文 */
+/* 单栏排版报纸正文 */
 .newspaper-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
+  display: block;
   text-align: justify;
   line-height: 1.6;
   font-size: 0.95rem;
@@ -140,21 +138,12 @@
 
 /* 首字放大段落效果 */
 .newspaper-columns p.lead-paragraph {
-  text-indent: 0;
+  /* 继承普通段落的缩进 */
 }
 
-.newspaper-columns p.lead-paragraph::first-letter {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 3rem;
-  float: left;
-  line-height: 0.85;
-  margin-right: 6px;
-  margin-top: 4px;
+.newspaper-columns p.lead-paragraph .drop-cap {
+  font-size: 2em;
   font-weight: bold;
-  color: #000;
-  border: 1px solid #1a1512;
-  padding: 4px 6px;
-  background-color: rgba(0,0,0,0.03);
 }
 
 /* 已阅/机密/特急印章的容器 */
@@ -252,5 +241,8 @@
 }
 .vintage-paper.export-mode .placed-stamp {
   filter: none !important;
+}
+.vintage-paper.export-mode .typewriter-cursor {
+  display: none !important;
 }
 

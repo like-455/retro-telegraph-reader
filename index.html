@@ -109,7 +109,6 @@
                   <div class="newspaper-title">每日电报</div>
                   <div class="newspaper-meta">
                     <span id="newspaper-date">光绪年间 · 十月十日</span>
-                    <span>定价：你本身，就是答案</span>
                     <span id="newspaper-issue">第 001 期</span>
                   </div>
                   <div class="header-bottom-border"></div>
@@ -186,10 +185,12 @@
               <div class="terminal-output-paper">
                 <div class="telegraph-tape" id="telegraph-tape">
                   <!-- 摩尔斯输出打孔纸带效果 -->
-                  ... - . .- -- ...
                 </div>
               </div>
-              <button class="mechanical-btn" id="btn-play-morse">发报 (Play)</button>
+              <div style="display: flex; gap: 10px;">
+                <button class="mechanical-btn" id="btn-play-morse" style="flex: 1;">发报 (Play)</button>
+                <button class="mechanical-btn" id="btn-reset-morse" style="flex: 1;">重置 (Reset)</button>
+              </div>
             </div>
           </div>
         </section>
